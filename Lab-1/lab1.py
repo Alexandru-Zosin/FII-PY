@@ -37,11 +37,15 @@ def problem_3(input_str_1, input_str_2):
 # 4. Write a script that converts a string of characters written in
 #  UpperCamelCase into lowercase_with_underscores.
 def problem_4(input_str):
+    output_str = ""
     for c in input_str:
         if c.isupper():
-            input_str = input_str.replace(c, '_' + c.lower())
-
-    return input_str
+            if len(output_str) != 0:
+                output_str += "_"
+            output_str += c.lower()
+        else:
+            output_str += c
+    return output_str
 
 # 5. Write a function that validates if a number is a palindrome.
 def problem_5(num):
@@ -72,7 +76,8 @@ def problem_6(text):
 
 # 7. Write a function that counts how many bits with value 1 a number has.
 # For example for number 24, the binary format is 00011000, meaning 2 bits with value "1"
-
+def problem_7(number):
+    return bin(number).count('1')
 
 # 8. Write a function that counts how many words exists in a text.
 #  A text is considered to be form out of words that are separated by only ONE space. 
@@ -93,4 +98,5 @@ if __name__ == "__main__":
     print("Problem 4 answer: ", problem_4("UpperCamelCaseCasesDe"))
     print("Problem 5 answer: ", problem_5(12321))
     print("Problem 6 answer: ", problem_6("litere01025sialtecifre982374"))
+    print("Problem 7 answer: ", problem_7(21))
     print("Problem 8 answer: ", problem_8("I have    Python  exam"))
