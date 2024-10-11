@@ -9,7 +9,7 @@ def find_gcd(a, b): #https://infogenius.ro/algoritmul-lui-euclid/
 
 def problem_1():
     count = int(input("How many numbers do you want to calculate GCD for?: "))
-    if (count < 2):
+    if count < 2:
         print("The GCD cannot be computed.")
 
     gcd = int(input("Enter number: "))
@@ -32,7 +32,7 @@ def problem_2(input_str):
 # of the first string in the second.
 def problem_3(input_str_1, input_str_2):
 #    input_str_1 = input("Enter the first string: ")
-    return(input_str_2.count(input_str_1))
+    return input_str_2.count(input_str_1)
 
 # 4. Write a script that converts a string of characters written in
 #  UpperCamelCase into lowercase_with_underscores.
@@ -77,7 +77,7 @@ def problem_6(text):
 # 7. Write a function that counts how many bits with value 1 a number has.
 # For example for number 24, the binary format is 00011000, meaning 2 bits with value "1"
 def problem_7(number):
-    return bin(number).count('1')
+    return bin(number).count('1') #  0b01010100.... 
 
 # 8. Write a function that counts how many words exists in a text.
 #  A text is considered to be form out of words that are separated by only ONE space. 
@@ -93,10 +93,10 @@ def problem_8(text):
 
 if __name__ == "__main__":
     print("Problem 1 answer: ", problem_1()) # reading from console
-    print("Problem 2 answer: ", problem_2("vowels in a string"))
-    print("Problem 3 answer: ", problem_3("do", "dogodogodo"))
-    print("Problem 4 answer: ", problem_4("UpperCamelCaseCasesDe"))
+    print("Problem 2 answer: ", problem_2("Ana are mere"))
+    print("Problem 3 answer: ", problem_3("ana", "ana are mere si nu are pere"))
+    print("Problem 4 answer: ", problem_4("AnaAreMere"))
     print("Problem 5 answer: ", problem_5(12321))
-    print("Problem 6 answer: ", problem_6("litere01025sialtecifre982374"))
-    print("Problem 7 answer: ", problem_7(21))
-    print("Problem 8 answer: ", problem_8("I have    Python  exam"))
+    print("Problem 6 answer: ", problem_6("ana are 02 3 mere"))
+    print("Problem 7 answer: ", problem_7(10))
+    print("Problem 8 answer: ", problem_8("Ana    are mere"))
