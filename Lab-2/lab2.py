@@ -147,8 +147,6 @@ def problem_9(matrix):
 
     return return_list
 
-
-
 # 11. Write a function that will order a list of string tuples based on the 3rd character
 # of the 2nd element in the tuple. 
 # Example: ('abc', 'bcd'), ('abc', 'zza')] ==> [('abc', 'zza'), ('abc', 'bcd')]
