@@ -110,7 +110,7 @@ def problem_7(num_list):
     
     return(count, max_palindrome)
 
-# Write a function that receives a number x, default value equal to 1, a list of strings, 
+# 8. Write a function that receives a number x, default value equal to 1, a list of strings, 
 # and a boolean flag set to True. For each string, generate a list containing the characters 
 # that have the ASCII code divisible by x if the flag is set to True,
 #  otherwise it should contain characters that have the ASCII code not divisible by x.
@@ -157,6 +157,31 @@ def problem_9(matrix):
 
     return return_list
 
+# 10. Write a function that receives a variable number of lists and returns a list of tuples as follows: 
+# the first tuple contains the first items in the lists, the second element contains the items
+# on the position 2 in the lists, etc. 
+# Example: for lists [1,2,3], [5,6,7], ["a", "b", "c"] return: [(1, 5, "a ") ,(2, 6, "b"), (3,7, "c")]. 
+# Note: If input lists do not have the same number of items, 
+# missing items will be replaced with None to be able to generate max ([len(x) for x in input_lists])
+# tuples.
+
+def problem_10(*lists):
+    result = []
+    max_length = max([len(l) for l in lists])
+
+    for i in range(max_length):
+        current_tuple = []
+
+        for l in lists:
+            if i < len(l):
+                current_tuple.append(l[i])
+            else:
+                current_tuple.append(None)
+        
+        result.append(tuple(current_tuple))
+
+    return result
+
 # 11. Write a function that will order a list of string tuples based on the 3rd character
 # of the 2nd element in the tuple. 
 # Example: ('abc', 'bcd'), ('abc', 'zza')] ==> [('abc', 'zza'), ('abc', 'bcd')]
@@ -199,5 +224,6 @@ if __name__ == "__main__":
      [6, 6, 7, 6, 7, 5]]
     print("8.", problem_8(2, ["test", "hello", "lab002"], False))
     print("9.", problem_9(m))
+    print("10.", problem_10([1,2,3], [5,6,7], ["a", "b", None]))
     print("11.", problem_11([("abc", "bcd"), ("abc", "zza")]))
     print("12.", problem_12(["ana", "banana", "carte", "arme", "parte"]))
