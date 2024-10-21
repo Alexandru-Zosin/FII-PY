@@ -56,6 +56,16 @@ def problem_4(musical_notes, moves, start_pos):
     
     return song
 
+# 5. Write a function that receives as parameter a matrix and will return the matrix obtained 
+# by replacing all the elements under the main diagonal with 0 (zero).
+def problem_5(matrix):
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            if i > j:
+                matrix[i][j] = 0
+                
+    return matrix
+
 # 6. Write a function that receives as a parameter a variable number of lists and a whole number x.
 # Return a list containing the items that appear exactly x times in the incoming lists.
 
@@ -179,6 +189,8 @@ if __name__ == "__main__":
     print("2.", problem_2([1, 2, 7, 43, 9, 13, 43, 0, 1, 4, 6, 21, 45]))
     print("3.", problem_3([2, 4, 43, 1, 123, 11], [2, 4, 43, 55, 10]))
     print("4.", problem_4(["do", "re", "mi", "fa", "sol"], [1, -3, 4, 2], 2))
+    sm = [[1, 1, 1], [1, 1, 1], [1, 1, 1]]
+    print("5.", problem_5(sm))
     print("6.", problem_6(2, [1, 2, 3], [2, 3, 4], [4, 5, 6], [4, 1, "test"]))
     print("7.", problem_7([123, 123, 1221, 22, 332121233]))
     m = [[1, 2, 3, 2, 1, 1],
