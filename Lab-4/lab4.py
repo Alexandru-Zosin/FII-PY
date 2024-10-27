@@ -29,7 +29,7 @@ def problem_2(my_string):
 
 def problem_4(tag, content, **elements):
     to_return = "<" + tag
-    for k, v in elements.items(): # (str, str)
+    for k, v in elements.items(): # iterator that yields key values (str, str) that's unpacking in k, v
         to_return += " " + k + " = \\\"" + v + '\\"'
 
     to_return += "> " + content + " </" + tag + ">"
