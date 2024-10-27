@@ -35,6 +35,31 @@ def problem_4(tag, content, **elements):
     to_return += "> " + content + " </" + tag + ">"
     return to_return
 
+# 5. The validate_dict function that receives as a parameter a set of tuples
+#  ( that represents validation rules for a dictionary that has strings as keys and values) 
+# and a dictionary. A rule is defined as follows: (key, "prefix", "middle", "suffix"). 
+# A value is considered valid if it starts with "prefix", "middle" is inside the value 
+# (not at the beginning or end) and ends with "suffix". 
+# The function will return True if the given dictionary matches all the rules, False otherwise. 
+# Example: the rules s={("key1", "", "inside", ""), ("key2", "start", "middle", "winter")} and 
+# d= {"key1": "come inside, it's too cold out", "key3": "this is not valid"} => False 
+# because although the rules are respected for "key1" and "key2" "key3" that does not appear 
+# in the rules.
+
+def problem_5(rules, d):
+    for key, prefix, middle, suffix in rules:
+        if d.get(key) == None:
+            return False
+        else:
+            value = d[key]
+
+        if not (value.startswith(prefix) and
+                middle in value[1:-1] and
+                value.endswith(suffix)):
+            return False
+
+    return True
+
 # 6. Write a function that receives as a parameter a list and returns a tuple (a, b),
 #  representing the number of unique elements in the list, 
 # and b representing the number of duplicate elements in the list (use sets to achieve this objective).
@@ -104,12 +129,14 @@ def problem_9(*positional_args, **keyword_args):
     keyword_values = [v for (k, v) in keyword_args.items()]
     return len([i for i in positional_args if i in keyword_values])
 
-# 3 si 5 not done
+# 3 LIPSA
 if __name__ == "__main__":
     print("1. ", problem_1([1, 2, 3, 4, 5], [3, 4, 5, 6, 7, 8]))
     print("2. ", problem_2("Ana has apples."))
     print("4. ", problem_4("a", "Hello there", href="http://python.org ", _class=" my-link ",
                         id=" someid "))
+    print("5. ", problem_5({("key1", "", "inside", ""), ("key2", "start", "middle", "winter")}, 
+                            {"key1": "come inside, it's too cold out", "key3": "this is not valid"}))
     print("6. ", problem_6([1, 2, 2, 5, 43, 12]))
     print("7. ", problem_7({1, 2}, {2, 3}))
     print("8. ", problem_8({
