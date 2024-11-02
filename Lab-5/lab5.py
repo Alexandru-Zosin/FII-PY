@@ -166,7 +166,7 @@ if __name__ == "__main__":
     other.set(1, 1, 1)
     other.set(2, 0, 1)
 
-    print
+    print()
     product = matrix.multiply(other)
     product.display() # 05 70
 
