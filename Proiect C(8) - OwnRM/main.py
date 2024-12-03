@@ -15,7 +15,7 @@ def on_same_file_system(path1, path2):
     # for consistency, using absolute paths is a good idea (even though os.stat() might resolve the path)
     abs_path1 = os.path.abspath(path1)
     abs_path2 = os.path.abspath(path2)
-    if os.name == "nt":
+    if os.name == "nt": # windows
         return os.path.splitdrive(abs_path1)[0] == os.path.splitdrive(abs_path2)[0]
     else: # unix
         return os.stat(abs_path1).st_dev == os.stat(abs_path2).st_dev
@@ -127,7 +127,7 @@ def parse_command(args):
         """To remove a file whose name starts with a '-', for example
            '-foo', use rm ./-foo"""
         if arg.startswith("-") and not os.path.exists(arg): 
-            if arg.startswith("--"):
+            if arg.startswith("--"): # LONG option
                 if arg not in long_options:
                     print(f"rm: invalid option '{arg}'")
                     print("Try 'rm --help' for more information.")
@@ -162,8 +162,8 @@ def parse_command(args):
                 elif arg == "--version":
                     print(read_file("version.txt"))
                     sys.exit(0)
-            else:
-                for char in arg[1:]:
+            else: # SHORT option
+                for char in arg[1:]: # supports "chained" options (e.g. -rf...)
                     if char not in short_options:
                         print(f"rm: invalid option '-{char}'")
                         print("Try 'rm --help' for more information.")
