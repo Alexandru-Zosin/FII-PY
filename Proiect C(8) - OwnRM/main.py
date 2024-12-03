@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 
 def read_file(filepath):
     try:
@@ -186,6 +187,33 @@ def parse_command(args):
 
     return options, paths
 
+def expand_wildcards_with_regex(paths):
+    expanded_paths = []
+    for path in paths:
+        if '*' in path or '?' in path:  # supported wildcards by our OwnRM
+            dir_name, pattern = os.path.split(path) # (head, tail<=>last component) | ("...", "head.txt")
+            if not dir_name: # for example, for an original path like "*.txt"
+                dir_name = '.' # program search defaults to current directory correctly
+            try:
+                """escape() is required so we avoid interpreting (other) special regex characters
+                   as it returns string with all non-alphanumerics backslashed (and after, in regex,
+                   a '\[' for example will get restored to the original literal because \ is the 
+                   escape code); 
+                   it's useful when matching a string with regex metacharacters in it."""
+                # replace "\*" with .(all chars w\o \n)*(>=0 reps); replace "\?" with .(1 rep)
+                # according to course 8, "$" matches end of the string (JUST BEFORE a newline \n),
+                # while apparently "\Z" is better (includes string ending with \n)
+                regex_pattern = re.escape(pattern).replace(r'\*', '.*').replace(r'\?', '.') + "$"
+                regex = re.compile(regex_pattern)
+                for entry in os.listdir(dir_name): # all files & directories in this path
+                    if regex.match(entry):
+                        expanded_paths.append(os.path.join(dir_name, entry))
+            except Exception as e:
+                print(f"rm: cannot access '{dir_name}': {e}")
+        else:
+            expanded_paths.append(path)
+    return expanded_paths
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("rm: missing operand")
@@ -193,6 +221,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     options, paths = parse_command(sys.argv[1:])
+    paths = expand_wildcards_with_regex(paths)
     
     ### --no-preserve-root check (os.remove() does NOT have built-in safeguards)
     if options["preserve_root"] and "/" in paths: # includes --preserve-root=all
