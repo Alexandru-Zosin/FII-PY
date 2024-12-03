@@ -213,11 +213,17 @@ if __name__ == "__main__":
     # after this, -I or --interactive=once DOESN'T NEED to be checked again, only NEVER or ALWAYS
 
     for path in paths:
+        """Any attempt to remove a file whose last file name component is
+           . or ..  is rejected with a diagnostic. """
+        # https://docs.python.org/3/library/os.path.html#os.path.basename
+        base_name = os.path.basename(path)
+        if base_name in [".", ".."]:
+            print(f"rm: cannot remove '{path}': Invalid argument")
+            continue
+
         ### --preserve-root=all check FS (for each argument)
         if options["preserve_root"] == "all":
             parent_dir = os.path.abspath(os.path.join(path, os.pardir))
-            # os.pardir returns a string that refers to the parent directory, by default it's ..
-            # https://stackoverflow.com/questions/2860153/how-do-i-get-the-parent-directory-in-python
             try:
                 if not on_same_file_system(path, parent_dir):
                     print(f"rm: '{path}' is on a different device from its parent")
