@@ -11,7 +11,14 @@ def read_file(filepath):
 
 def on_same_file_system(path1, path2):
     # https://stackoverflow.com/questions/970742/is-a-file-on-the-same-filesystem-as-another-file-in-python
-    return os.stat(path1).st_dev == os.stat(path2).st_dev
+    # https://unix.stackexchange.com/questions/44249/how-to-check-if-two-directories-or-files-belong-to-same-filesystem
+    # for consistency, using absolute paths is a good idea (even though os.stat() might resolve the path)
+    abs_path1 = os.path.abspath(path1)
+    abs_path2 = os.path.abspath(path2)
+    if os.name == "nt":
+        return os.path.splitdrive(abs_path1)[0] == os.path.splitdrive(abs_path2)[0]
+    else: # unix
+        return os.stat(abs_path1).st_dev == os.stat(abs_path2).st_dev
 
 def remove_file(filepath, options):
     if options["dry_run"]:
@@ -103,18 +110,18 @@ def parse_command(args):
     long_options = [
         "--force",
         "--interactive", "--interactive=never", "--interactive=once", "--interactive=always",
-        "--one-file-system",
+        "--one-file-system", # applies only during recursion
         "--dry-run",
-        "--no-preserve-root",
-        "--preserve-root",
-        "--preserve-root=all",
+        "--no-preserve-root", # does not treat '/' specially
+        "--preserve-root", # protects "/" (NOT REMOVABLE)
+        "--preserve-root=all", # extends --p-r and applies individually (paths and parent on the same FS)
         "--recursive",
         "--dir",
         "--verbose",
         "--help",
         "--version",
     ]
-    files = []
+    paths = []
 
     for arg in args:
         if arg.startswith("-"):
@@ -173,9 +180,9 @@ def parse_command(args):
                     elif char == "v":
                         options["verbose"] = True
         else:
-            files.append(arg)
+            paths.append(arg)
 
-    return options, files
+    return options, paths
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -183,35 +190,49 @@ if __name__ == "__main__":
         print("Try 'rm --help' for more information.")
         sys.exit(1)
 
-    options, files = parse_command(sys.argv[1:])
+    options, paths = parse_command(sys.argv[1:])
     
-    if options["preserve_root"] and "/" in files:
+    ### --no-preserve-root check (os.remove() does NOT have built-in safeguards)
+    if options["preserve_root"] and "/" in paths: # includes --preserve-root=all
         print("rm: it is dangerous to operate recursively on '/'")
         print("Use '--no-preserve-root' to override this failsafe (not allowed on Windows).")
         sys.exit(1)
     if not options["preserve_root"] and os.name == "nt":
         print("rm: the option '--no-preserve-root' is not allowed on Windows for safety reasons.")
         sys.exit(1)
-    # os.remove() does NOT have built-in safeguards
     
     # after this, IF not options["preserve_root"] <==> preserve_root = False <==> --no-preserve-root,
     # ANY POSSIBLE DELETE IS PERMITTED!
     
     """If the -I or --interactive=once is given, and there are more than 3 files or the -r is given,
        then rm prompts the user to proceed with the entire operation (or entirely abort it)."""
-    if options["interactive"] == "once" and (options["recursive"] or len(files) > 3):
+    if options["interactive"] == "once" and (options["recursive"] or len(paths) > 3):
         prompt = input("rm: remove multiple files or directories recursively? [y/N] ").lower()
         if prompt != "y":
             sys.exit(1)
     # after this, -I or --interactive=once DOESN'T NEED to be checked again, only NEVER or ALWAYS
 
-    for file in files:
-        if os.path.isdir(file):
+    for path in paths:
+        ### --preserve-root=all check FS (for each argument)
+        if options["preserve_root"] == "all":
+            parent_dir = os.path.abspath(os.path.join(path, os.pardir))
+            # os.pardir returns a string that refers to the parent directory, by default it's ..
+            # https://stackoverflow.com/questions/2860153/how-do-i-get-the-parent-directory-in-python
+            try:
+                if not on_same_file_system(path, parent_dir):
+                    print(f"rm: '{path}' is on a different device from its parent")
+                    print("Use '--no-preserve-root' to override this failsafe.")
+                    continue
+            except Exception as e:
+                print(f"rm: cannot access '{path}' to verify device: {e}")
+                continue
+
+        if os.path.isdir(path):
             if options["recursive"]:
-                remove_dir(file, options)
+                remove_dir(path, options)
             elif options["dir"]:
-                remove_empty_dir(file, options)
+                remove_empty_dir(path, options)
             else:
-                print(f"rm: cannot remove '{file}': Is a directory")
+                print(f"rm: cannot remove '{path}': Is a directory")
         else:
-            remove_file(file, options)
+            remove_file(path, options)
