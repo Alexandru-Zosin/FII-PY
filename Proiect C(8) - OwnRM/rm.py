@@ -22,13 +22,13 @@ def on_same_file_system(path1, path2):
         return os.stat(abs_path1).st_dev == os.stat(abs_path2).st_dev
 
 def remove_file(filepath, options):
-    if options["dry_run"]:
-        print(f"rm: would remove {filepath}")
-        return
-
     if not os.path.exists(filepath):
         if not options["force"]:
             print(f"rm: cannot remove '{filepath}': No such file or directory")
+        return
+
+    if options["dry_run"]:
+        print(f"rm: would remove {filepath}")
         return
 
     try:
@@ -46,10 +46,6 @@ def remove_file(filepath, options):
         print(f"rm: cannot remove '{filepath}': {e}")
 
 def remove_empty_dir(dirpath, options):
-    if options["dry_run"]:
-        print(f"rm: would remove empty directory '{dirpath}'")
-        return
-
     if not os.path.exists(dirpath):
         if not options["force"]:
             print(f"rm: cannot remove '{dirpath}': No such file or directory")
@@ -57,6 +53,10 @@ def remove_empty_dir(dirpath, options):
 
     if os.listdir(dirpath):  # checks if the directory is empty
         print(f"rm: cannot remove '{dirpath}': Directory not empty")
+        return
+
+    if options["dry_run"]:
+        print(f"rm: would remove empty directory '{dirpath}'")
         return
 
     try:
