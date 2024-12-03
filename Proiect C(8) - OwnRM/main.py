@@ -99,7 +99,7 @@ def parse_command(args):
     options = {
         "force": False,
         "interactive": "never",
-        "one_file_system": False,
+        "one_file_system": False,  # applies only during recursion
         "preserve_root": True,
         "recursive": False,
         "dir": False,
@@ -124,7 +124,9 @@ def parse_command(args):
     paths = []
 
     for arg in args:
-        if arg.startswith("-"):
+        """To remove a file whose name starts with a '-', for example
+           '-foo', use rm ./-foo"""
+        if arg.startswith("-") and not os.path.exists(arg): 
             if arg.startswith("--"):
                 if arg not in long_options:
                     print(f"rm: invalid option '{arg}'")
