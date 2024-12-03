@@ -47,8 +47,5 @@
        '.' or '..'  is rejected with a diagnostic.
 
        To remove a file whose name starts with a '-', for example
-       '-foo', use one of these commands:
-
-              rm -- -foo
-
+       '-foo', use this command:
               rm ./-foo
