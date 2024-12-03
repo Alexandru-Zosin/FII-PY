@@ -107,7 +107,7 @@ def parse_command(args):
         "verbose": False,
         "dry_run": False,
     }
-    short_options = ["-f", "-i", "-I", "-r", "-R", "-d", "-v"]
+    short_options = ["f", "i", "I", "r", "R", "d", "v"]
     long_options = [
         "--force",
         "--interactive", "--interactive=never", "--interactive=once", "--interactive=always",
@@ -195,10 +195,9 @@ def expand_wildcards_with_regex(paths):
             if not dir_name: # for example, for an original path like "*.txt"
                 dir_name = '.' # program search defaults to current directory correctly
             try:
-                """escape() is required so we avoid interpreting (other) special regex characters
-                   as it returns string with all non-alphanumerics backslashed (and after, in regex,
-                   a '\[' for example will get restored to the original literal because \ is the 
-                   escape code); 
+                """escape() is required so we avoid interpreting (other) special regex characters,
+                   as it returns string with all non-alphanumerics backslashed (which will later
+                   get restored to the original literal in regex (slash being the escape code); 
                    it's useful when matching a string with regex metacharacters in it."""
                 # replace "\*" with .(all chars w\o \n)*(>=0 reps); replace "\?" with .(1 rep)
                 # according to course 8, "$" matches end of the string (JUST BEFORE a newline \n),
