@@ -15,14 +15,14 @@ Logica din spatele scriptului:
 - N => *remove_file(path, options)*
 
 Module folosite (prezentate la curs):
-- sys
-- os
-- re
+- *sys*
+- *os*
+- *re*
 
 Functionalitati:
 1. suport wildcarduri (* si ?) pentru filename (ex.: "rm -r --interactive=always folder/*")
 2. suport --dry-run
-3. toate optiunile de pe rm(1) - Linux manual page, cu mentiunile urmatoare:
+3. toate optiunile de pe *rm(1) - Linux manual page*, cu mentiunile urmatoare:
 - niciun bug *cunoscut*
 - am implementat doar "rm ./-foo" pentru stergerea unui fisier al carui nume incepe cu '-', nu si "rm -- -foo"
 - nu am testat inca --one-file-system si --preserve-root=all
