@@ -25,6 +25,7 @@ Functionalitati:
 2. suport --dry-run
 3. toate optiunile de pe *rm(1) - Linux manual page*, cu mentiunile urmatoare:
 - niciun bug *cunoscut* (am testat scriptul pe Windows 10 si intr-un Kali Linux VM)
+- posibil sa fi omis/nu fie plasate perfect blocuri *try-except*
 - am implementat doar "rm ./-foo" pentru stergerea unui fisier al carui nume incepe cu '-', nu si "rm -- -foo"
 - nu am testat inca --one-file-system si --preserve-root=all
 - nu am testat "rm -rf --no-preserve-root /" (ma tem, chiar si pe un VM)
