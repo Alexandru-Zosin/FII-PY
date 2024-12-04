@@ -23,15 +23,43 @@ def on_same_file_system(path1, path2):
     else: # unix
         return os.stat(abs_path1).st_dev == os.stat(abs_path2).st_dev
 
+def verify_pr_ofs_and_exists(path, options):
+    """ Verifies - --preserve-root=all, --one-file-system and the existence of the file/directory for
+        remove_file() and remove_empty_dir().
+        Returns True if all checks pass, otherwise False. """
+    # --preserve-root=all check
+    if options["preserve_root"] == "all":
+        parent_dir = os.path.abspath(os.path.join(path, os.pardir))
+        try:
+            if not on_same_file_system(path, parent_dir):
+                print(f"rm: '{path}' is on a different device from its parent")
+                return False
+        except Exception as e:
+            print(f"rm: cannot access '{path}' to verify device: {e}")
+            return False
+
+    # --one-file-system check
+    if options["one_file_system"]:
+        root_path = options["root_path"]  # root path set during remove_dir() recursive delete
+        if root_path and not on_same_file_system(path, root_path):
+            print(f"rm: skipping '{path}': different file system")
+            return False
+
+    # existance check (without -f)
+    if not os.path.exists(path):
+        if not options["force"]:
+            print(f"rm: cannot remove '{path}': No such file or directory")
+        return False
+
+    return True
+
 def remove_file(filepath, options):
     """Removes a file."""
-    if not os.path.exists(filepath):
-        if not options["force"]:
-            print(f"rm: cannot remove '{filepath}': No such file or directory")
+    if not verify_pr_ofs_and_exists(filepath, options): # some preliminary option checks
         return
 
     if options["dry_run"]:
-        print(f"rm: would remove {filepath}")
+        print(f"rm: would remove '{path}'")
         return
 
     try:
@@ -50,9 +78,7 @@ def remove_file(filepath, options):
 
 def remove_empty_dir(dirpath, options):
     """Checks if a directory is empty, then deletes it."""
-    if not os.path.exists(dirpath):
-        if not options["force"]:
-            print(f"rm: cannot remove '{dirpath}': No such file or directory")
+    if not verify_pr_ofs_and_exists(dirpath, options): # some preliminary option checks
         return
 
     if os.listdir(dirpath):  # checks if the directory is empty
@@ -60,7 +86,7 @@ def remove_empty_dir(dirpath, options):
         return
 
     if options["dry_run"]:
-        print(f"rm: would remove empty directory '{dirpath}'")
+        print(f"rm: would remove empty '{dirpath}'")
         return
 
     try:
@@ -81,16 +107,16 @@ def remove_dir(dirpath, options):
         print(f"rm: would remove {dirpath} and its contents recursively")
         return
 
+    if options["one_file_system"]:      # sets "corresponding command line argument" root path 
+        options["root_path"] = dirpath  # for --one-file-system
+
     try:
-        # root - abs. path to directory currently being processed; 
-        # dirs - subdirs in root; 
-        # files - files in the root
+        # https://stackoverflow.com/questions/10989005/do-i-understand-os-walk-right
+        # root - root directory of each step (currently being processed); 
+        # dirs - subdirs (one level) inside root - only their names^ 
+        # files - files (one level) in the root - only their names^
         # topdown = False  ------ deepest subdirectories first (so we can delete empty folders)
-        for (root, dirs, files) in os.walk(dirpath, topdown=False): 
-            # skips directories on different file systems if --one-file-system is enabled
-            if options["one_file_system"] and not on_same_file_system(root, dirpath):
-                print(f"Skipping '{root}': different file system")
-                continue
+        for (root, dirs, files) in os.walk(dirpath, topdown=False):
             for file_name in files: # deletes all files
                 remove_file(os.path.join(root, file_name), options) 
             for empty_dir_name in dirs: # deletes directories AFTER they've been emptied 
@@ -257,18 +283,6 @@ if __name__ == "__main__":
         if base_name in [".", ".."]:
             print(f"rm: cannot remove '{path}': Invalid argument")
             continue
-
-        ### --preserve-root=all check FS (for each argument)
-        if options["preserve_root"] == "all":
-            parent_dir = os.path.abspath(os.path.join(path, os.pardir))
-            try:
-                if not on_same_file_system(path, parent_dir):
-                    print(f"rm: '{path}' is on a different device from its parent")
-                    print("Use '--no-preserve-root' to override this failsafe.")
-                    continue
-            except Exception as e:
-                print(f"rm: cannot access '{path}' to verify device: {e}")
-                continue
 
         if os.path.isdir(path):
             if options["recursive"]:
