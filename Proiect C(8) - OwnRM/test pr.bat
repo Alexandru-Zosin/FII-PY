@@ -10,3 +10,4 @@ echo File on different FS > D:\cross-fs-dir\file3.txt
 mklink /D C:\test-root\child-dir\cross-link D:\cross-fs-dir
 python rm.py --preserve-root=all --recursive --dry-run C:\test-root
 pause
+:: return in rm.py (line109 should be removed to use --dry-run)
