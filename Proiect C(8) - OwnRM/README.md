@@ -1,4 +1,5 @@
 Proiect C: 8 - OwnRM
+
 *Realizati un script care să imite functionalitatea utilitarului rm din Linux.*
 
 Scriptul este realizat astfel incat sa urmeze indeaproape indicatiile de pe *rm(1) - Linux manual page*, functionand pentru sisteme de operare Linux si Windows.
