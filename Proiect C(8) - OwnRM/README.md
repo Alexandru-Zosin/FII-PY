@@ -1,4 +1,4 @@
-Proiect C: 8 - OwnRM
+# Proiect C: 8 - OwnRM
 
 *Realizati un script care să imite functionalitatea utilitarului rm din Linux.*
 
@@ -24,7 +24,7 @@ Functionalitati:
 1. suport wildcarduri (* si ?) pentru filename (ex.: "rm -r --interactive=always folder/*")
 2. suport --dry-run
 3. toate optiunile de pe *rm(1) - Linux manual page*, cu mentiunile urmatoare:
-- niciun bug *cunoscut*
+- niciun bug *cunoscut* (am testat scriptul pe Windows 10 si intr-un Kali Linux VM)
 - am implementat doar "rm ./-foo" pentru stergerea unui fisier al carui nume incepe cu '-', nu si "rm -- -foo"
 - nu am testat inca --one-file-system si --preserve-root=all
 - nu am testat "rm -rf --no-preserve-root /" (ma tem, chiar si pe un VM)
