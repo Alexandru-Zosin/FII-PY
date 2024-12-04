@@ -2,7 +2,7 @@ Proiect C: 8 - OwnRM
 "Realizati un script care să imite functionalitatea utilitarului rm din Linux."
 
 Scriptul este realizat astfel incat sa urmeze indeaproape indicatiile de pe "rm(1) - Linux manual page", functionand pentru sisteme de operare Linux si Windows.
-A fost facil de implementat, fiind o buna recapitulare pentru notiuni de la cursul de Programare in Python din prima parte a semestrului.
+A fost facil de implementat, fiind o buna recapitulare pentru notiuni de la cursul de Programare in Python din prima parte a semestrului. Fiecare functionalitate descrisa si implementata de pe "rm(1) - Linux manual page" este indicata corespunzator in cod printr-un comentariu.
 
 Module folosite (prezentate la curs):
 - sys
