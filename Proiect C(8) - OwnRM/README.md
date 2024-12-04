@@ -27,5 +27,5 @@ Functionalitati:
 - niciun bug *cunoscut* (am testat scriptul pe Windows 10 si intr-un Kali Linux VM)
 - posibil sa fi omis/nu fie plasate perfect blocuri *try-except*
 - am implementat doar "rm ./-foo" pentru stergerea unui fisier al carui nume incepe cu '-', nu si "rm -- -foo"
-- nu am testat inca --one-file-system si --preserve-root=all
+- am testat --one-file-system si --preserve-root=all doar pe Windows 10
 - nu am testat "rm -rf --no-preserve-root /" (ma tem, chiar si pe un VM)

@@ -13,15 +13,12 @@ def read_file(filepath):
 
 def on_same_file_system(path1, path2):
     """Required for --one-file-system and --preserve-root=all."""
-    # https://stackoverflow.com/questions/970742/is-a-file-on-the-same-filesystem-as-another-file-in-python
     # https://unix.stackexchange.com/questions/44249/how-to-check-if-two-directories-or-files-belong-to-same-filesystem
     # for consistency, using absolute paths is a good idea (even though os.stat() might resolve the path)
     abs_path1 = os.path.abspath(path1)
     abs_path2 = os.path.abspath(path2)
-    if os.name == "nt": # windows
-        return os.path.splitdrive(abs_path1)[0] == os.path.splitdrive(abs_path2)[0]
-    else: # unix
-        return os.stat(abs_path1).st_dev == os.stat(abs_path2).st_dev
+    # return os.path.splitdrive(abs_path1)[0] == os.path.splitdrive(abs_path2)[0] for "nt" is unreliable
+    return os.stat(abs_path1).st_dev == os.stat(abs_path2).st_dev # device number in hex
 
 def verify_pr_ofs_and_exists(path, options):
     """ Verifies - --preserve-root=all, --one-file-system and the existence of the file/directory for
@@ -110,7 +107,7 @@ def remove_dir(dirpath, options):
     if options["dry_run"]:
         print(f"rm: would remove {dirpath} and its contents recursively")
         return
-
+    
     if options["one_file_system"]:      # sets "corresponding command line argument" root path 
         options["root_path"] = dirpath  # for --one-file-system
 
