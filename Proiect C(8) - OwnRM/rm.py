@@ -3,6 +3,7 @@ import os
 import re
 
 def read_file(filepath):
+    """Required for --help and version options."""
     try:
         with open(filepath, "r") as file:
             return file.read()
@@ -11,6 +12,7 @@ def read_file(filepath):
         sys.exit(1)
 
 def on_same_file_system(path1, path2):
+    """Required for --one-file-system and --preserve-root=all."""
     # https://stackoverflow.com/questions/970742/is-a-file-on-the-same-filesystem-as-another-file-in-python
     # https://unix.stackexchange.com/questions/44249/how-to-check-if-two-directories-or-files-belong-to-same-filesystem
     # for consistency, using absolute paths is a good idea (even though os.stat() might resolve the path)
@@ -22,6 +24,7 @@ def on_same_file_system(path1, path2):
         return os.stat(abs_path1).st_dev == os.stat(abs_path2).st_dev
 
 def remove_file(filepath, options):
+    """Removes a file."""
     if not os.path.exists(filepath):
         if not options["force"]:
             print(f"rm: cannot remove '{filepath}': No such file or directory")
@@ -46,6 +49,7 @@ def remove_file(filepath, options):
         print(f"rm: cannot remove '{filepath}': {e}")
 
 def remove_empty_dir(dirpath, options):
+    """Checks if a directory is empty, then deletes it."""
     if not os.path.exists(dirpath):
         if not options["force"]:
             print(f"rm: cannot remove '{dirpath}': No such file or directory")
@@ -72,6 +76,7 @@ def remove_empty_dir(dirpath, options):
         print(f"rm: cannot remove '{dirpath}': {e}")
 
 def remove_dir(dirpath, options):   
+    """Removes a directory by using both remove_file() and remove_empty_dir()."""
     if options["dry_run"]:
         print(f"rm: would remove {dirpath} and its contents recursively")
         return
@@ -97,6 +102,7 @@ def remove_dir(dirpath, options):
         print(f"rm: cannot remove '{dirpath}': {e}")
 
 def parse_command(args):
+    """Parses the command into options and paths."""
     options = {
         "force": False,
         "interactive": "never",
@@ -188,6 +194,7 @@ def parse_command(args):
     return options, paths
 
 def expand_wildcards_with_regex(paths):
+    """Supports * and ? for filenames."""
     expanded_paths = []
     for path in paths:
         if '*' in path or '?' in path:  # supported wildcards by our OwnRM
