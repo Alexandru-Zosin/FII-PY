@@ -11,7 +11,7 @@ Logica din spatele scriptului:
 - validare argumente
 - unpacking in options(aceleasi pentru toate paths) si paths
 3. pentru fiecare path, se verifica daca este sau nu director
-- Y => remove_dir(path, options), care foloseste os.walk(topdown=False) a.i. sa foloseasca mai intai remove_file(), iar apoi remove_empty_dir() pe directoarele ramase fara continut
+- Y => remove_dir(path, options), care foloseste os.walk(topdown=False) astfel incat sa utilizam mai intai remove_file(), dupa care remove_empty_dir() pe directoarele ramase fara continut
 - N => remove_file(path, options)
 
 Module folosite (prezentate la curs):
