@@ -32,17 +32,21 @@ def verify_pr_ofs_and_exists(path, options):
         parent_dir = os.path.abspath(os.path.join(path, os.pardir))
         try:
             if not on_same_file_system(path, parent_dir):
-                print(f"rm: '{path}' is on a different device from its parent")
+                print(f"rm: '{path}' is on a different file system from its parent")
                 return False
         except Exception as e:
-            print(f"rm: cannot access '{path}' to verify device: {e}")
+            print(f"rm: cannot access '{path}' to verify file system: {e}")
             return False
 
     # --one-file-system check
     if options["one_file_system"]:
-        root_path = options["root_path"]  # root path set during remove_dir() recursive delete
-        if root_path and not on_same_file_system(path, root_path):
-            print(f"rm: skipping '{path}': different file system")
+        root_path = options["root_path"]  # start root path set during remove_dir() recursive delete
+        try:
+            if not on_same_file_system(path, root_path) and root_path:
+                print(f"rm: skipping '{path}': different file system")
+                return False
+        except Exception as e:
+            print(f"rm: cannot access '{path}' to verify file system: {e}")
             return False
 
     # existance check (without -f)
