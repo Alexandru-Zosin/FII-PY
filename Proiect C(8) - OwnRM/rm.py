@@ -15,7 +15,7 @@ def on_same_file_system(path1, path2):
     """Required for --one-file-system and --preserve-root=all."""
     # https://unix.stackexchange.com/questions/44249/how-to-check-if-two-directories-or-files-belong-to-same-filesystem
     # for consistency, using absolute paths is a good idea (even though os.stat() might resolve the path)
-    abs_path1 = os.path.abspath(path1)
+    abs_path1 = os.path.abspath(path1) # relative path (or not) => absolute path
     abs_path2 = os.path.abspath(path2)
     # return os.path.splitdrive(abs_path1)[0] == os.path.splitdrive(abs_path2)[0] for "nt" is unreliable
     return os.stat(abs_path1).st_dev == os.stat(abs_path2).st_dev # device number in hex
